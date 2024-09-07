@@ -6,25 +6,52 @@ from typing import List, TypeVar
 
 
 class Auth:
-    def __init__(self):
-        """
-        Initialization method for the Auth class.
-        """
-
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
-        Returns False - path and excluded_paths will be used later
+        Determine if authentication is required for the given path.
+        Returns True if path is not in the list of strings excluded_paths.
+
+        Args:
+            path (str): The path to check.
+            excluded_paths (List[str]): List of paths that are excluded from authentication.
+
+        Returns:
+            bool: True or False depending on the conditions.
         """
-        return False
+        if path is None:
+            return True
+
+        if excluded_paths is None or len(excluded_paths) == 0:
+            return True
+
+        # Ensure all paths end with a '/'
+        path = path.rstrip('/') + '/'
+        normalized_excluded_paths = [ep.rstrip('/') + '/' for ep in excluded_paths]
+
+        return path not in normalized_ecluded_paths
 
     def authorization_header(self, request=None) -> str:
         """
-        Returns None - request will be the Flask request object
+        Get the authorization header from the request.
+        For now, it always returns None.
+
+        Args:
+            request (Flask request): The Flask request object.
+
+        Returns:
+            str: None (no authorization header).
         """
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
-        Returns None - request will be the Flask request object
+        Get the current user from the request.
+        For now, it always returns None.
+
+        Args:
+            request (Flask request): The Flask request object.
+
+        Returns:
+            User: None (no current user).
         """
         return None
