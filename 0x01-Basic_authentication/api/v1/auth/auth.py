@@ -8,6 +8,11 @@ from typing import List, TypeVar
 class Auth:
     """Template for API authentication system"""
 
+    def __init__(self):
+        """
+        Initialization method for the Auth class.
+        """
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Determine if authentication is required for the given path.
