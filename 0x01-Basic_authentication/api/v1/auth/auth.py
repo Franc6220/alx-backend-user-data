@@ -6,6 +6,13 @@ from typing import List, TypeVar
 
 
 class Auth:
+    def __init__(self):
+        """
+        Initialization method for the Auth class.
+        """
+        # Initialize attributes here if needed
+        pass
+
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Returns False - path and excluded_paths will be used later
