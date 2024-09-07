@@ -10,8 +10,6 @@ class Auth:
         """
         Initialization method for the Auth class.
         """
-        # Initialize attributes here if needed
-        pass
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
