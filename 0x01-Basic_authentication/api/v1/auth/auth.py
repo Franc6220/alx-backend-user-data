@@ -3,6 +3,7 @@
 """
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
@@ -12,6 +13,7 @@ class Auth:
         """
         Initialization method for the Auth class.
         """
+        pass
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
@@ -31,11 +33,16 @@ class Auth:
         if excluded_paths is None or len(excluded_paths) == 0:
             return True
 
-        # Ensure all paths end with a '/'
+        # Normalize path to ensure consistency in comparison
         path = path.rstrip('/') + '/'
-        normalized_excluded_paths = [ep.rstrip('/') + '/' for ep in excluded_paths]
+        
+        for excluded_path in excluded_paths:
+            # Normalize excluded path
+            normalized_excluded_path = excluded_path.rstrip('/') + '/'
+            if fnmatch.fnmatch(path, normalized_excluded_path):
+                return False
 
-        return path not in normalized_excluded_paths
+        return True
 
     def authorization_header(self, request=None) -> str:
         """
