@@ -41,9 +41,10 @@ class BasicAuth(Auth):
             return None
 
         try:
-            # Ensure that the string length is a multiple of 4, as required by Base64
-            if len(base64_authorization_header) % 4 != 0:
-                return None
+            # Ensure that Base64 is correctly padded
+            missing_padding = len(base64_authorization_header) % 4
+            if missing_padding != 0:
+                base64_authorization_header += '=' * (4 - missing_padding)
 
             # Decode Base64 and return as UTF-8 string, stripping unnecessary padding or spaces
             decoded_bytes = base64.b64decode(base64_authorization_header, validate=True)
