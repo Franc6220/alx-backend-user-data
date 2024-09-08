@@ -94,11 +94,11 @@ class BasicAuth(Auth):
             return None
 
         # Search for the user by email
-        user = User.search({"email": user_email})
-        if not user:
+        users = User.search({"email": user_email})
+        if not users:
             return None
 
-        user = user[0]    # Assuming search returns a list, we grab the first match.
+        user = users[0]    # Assuming search returns a list, we grab the first match.
 
 
         # Validate the password
