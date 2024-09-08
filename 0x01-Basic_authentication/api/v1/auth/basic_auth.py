@@ -47,6 +47,6 @@ class BasicAuth(Auth):
 
             # Decode Base64 and return as UTF-8 string, stripping unnecessary padding or spaces
             decoded_bytes = base64.b64decode(base64_authorization_header, validate=True)
-            return decoded_bytes.decode('utf-8').strip()
-        except (base64.binascii.Error, ValueError):
+            return decoded_bytes.decode('utf-8')
+        except (base64.binascii.Error, ValueError, TypeError):
             return None
