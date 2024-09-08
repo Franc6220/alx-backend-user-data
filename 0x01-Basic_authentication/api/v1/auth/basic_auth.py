@@ -96,7 +96,6 @@ class BasicAuth(Auth):
         # Search for the user by email
         user = User.search({"email": user_email})
         if not user:
-            print(f"User with email {user_email} not found")  # Debugging info
             return None
 
         user = user[0]    # Assuming search returns a list, we grab the first match.
@@ -104,7 +103,6 @@ class BasicAuth(Auth):
 
         # Validate the password
         if not user.is_valid_password(user_pwd):
-            print(f"Invalid password for user {user_email}")  # Debugging info
             return None
 
         return user
