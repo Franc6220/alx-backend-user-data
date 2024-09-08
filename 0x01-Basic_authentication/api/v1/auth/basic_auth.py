@@ -37,9 +37,7 @@ class BasicAuth(Auth):
         Returns:
             str: The decoded string, or None if the input is invalid.
         """
-        if base64_authorization_header is None:
-            return None
-        if not isinstance(base64_authorization_header, str):
+        if base64_authorization_header is None or not isinstance(base64_authorization_header, str):
             return None
 
         try:
@@ -106,3 +104,31 @@ class BasicAuth(Auth):
             return None
 
         return user
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        Retrieve the current User instance from a request.
+
+        Args:
+            request: The request object containing the Authorization header.
+
+        Returns:
+            User: The User instance if valid credentials are provided, None otherwise.
+        """
+        auth_header = self.authorization_header(request)
+        if auth_header is None:
+            return None
+
+        base64_auth_header = self.extract_base64_authorization_header(auth_header)
+        if base64_auth_header is None:
+            return None
+
+        decoded_auth_header = self.decode_base64_authorization_header(base64_auth_header)
+        if decoded_auth_header is None:
+            return None
+
+        email, password = self.extract_user_credentials(decoded_auth_header)
+        if email is None or password is None:
+            return None
+
+        return self.user_object_from_credentials(email, password)
