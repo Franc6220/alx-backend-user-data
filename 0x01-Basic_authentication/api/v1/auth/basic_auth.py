@@ -4,7 +4,7 @@
 import base64
 from api.v1.auth.auth import Auth
 from models.user import User
-from typing import Typevar
+from typing import TypeVar
 
 class BasicAuth(Auth):
     """ BasicAuth class that inherits from Auth """
@@ -96,12 +96,15 @@ class BasicAuth(Auth):
         # Search for the user by email
         user = User.search({"email": user_email})
         if not user:
+            print(f"User with email {user_email} not found")  # Debugging info
             return None
 
-        user = user[0]   # Assuming search returns a list, we grab the first match.
+        user = user[0]    # Assuming search returns a list, we grab the first match.
+
 
         # Validate the password
         if not user.is_valid_password(user_pwd):
+            print(f"Invalid password for user {user_email}")  # Debugging info
             return None
 
         return user
