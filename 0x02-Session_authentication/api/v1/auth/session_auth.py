@@ -3,6 +3,7 @@
 """
 from api.v1.auth.auth import Auth
 import uuid
+from models.user import User
 
 class SessionAuth(Auth):
     """ SessionAuth class that inherits from Auth
@@ -27,3 +28,28 @@ class SessionAuth(Auth):
             return None
 
         return self.user_id_by_session_id.get(session_id)
+
+    def session_cookie(self, request=None):
+        """Returns the session cookie from the request"""
+        if request is None:
+            return None
+        session_name = getenv("SESSION_NAME")
+        return request.cookies.get(session_name)
+
+    def current_user(self, request=None):
+        """Returns the current User instance based on the session cookie"""
+        if request is None:
+            return None
+
+        # Get the session ID from the cookie
+        session_id = self.session_cookie(request)
+        if session_id is None:
+            return None
+
+        # Get the user ID based on the session ID
+        user_id = self.user_id_for_session_id(session_id)
+        if user_id is None:
+            return None
+
+        # Retrieve and return the User instance based on the user ID
+        return User.get(user_id)
