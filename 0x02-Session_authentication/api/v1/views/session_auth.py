@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request, make_response
 from models.user import User
 from api.v1.auth.session_auth import SessionAuth
 import os
+from api.v1.app import auth
 
 api = Blueprint('api', __name__, url_prefix='/api/v1')
 
@@ -35,3 +36,10 @@ def login():
     response.set_cookie(session_name, session_id)
 
     return response
+
+@api.route('/auth_session/logout', methods=['DELETE'])
+def logout():
+    """Logout route for session authentication"""
+    if not auth.destroy_session(request):
+        abort(404)
+    return jsonify({})
