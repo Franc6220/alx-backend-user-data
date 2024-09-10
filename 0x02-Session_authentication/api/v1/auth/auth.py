@@ -71,3 +71,20 @@ class Auth:
             User: None (no current user).
         """
         return None
+
+    def session_cookie(self, request=None):
+        """
+        Return the value of the session cookie named by the environment variable SESSION_NAME.
+
+        Args:
+            request (Flask request): The Flask request object.
+
+        Returns:
+            str: The value of the session cookie, or None if not found.
+        """
+        if request is None:
+            return None
+
+        # Get the session cookie name from the environment variable or default to '_my_session_id'
+        session_name = getenv('SESSION_NAME', '_my_session_id')
+        return request.cookies.get(session_name)
