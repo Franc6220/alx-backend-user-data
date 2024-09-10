@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """ session_auth module """
 
-
-from flask import jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response
 from models.user import User
 from api.v1.auth.session_auth import SessionAuth
 import os
+
+api = Blueprint('api', __name__, url_prefix='/api/v1')
 
 sa = SessionAuth()
 
@@ -20,7 +21,7 @@ def login():
     if not password:
         return jsonify({"error": "password missing"}), 400
 
-    user = User.search({"email": email})
+    user = User.search(email)
     if not user:
         return jsonify({"error": "no user found for this email"}), 404
 

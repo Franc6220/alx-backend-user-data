@@ -10,7 +10,7 @@ from api.v1.views.users import *
 
 # Import the login view and add it to the Blueprint
 from api.v1.views.session_auth import login
-app_views.add_url_rule('/auth_session/login', view_func=login, metthods=['POST'])
+app_views.add_url_rule('/auth_session/login', view_func=login, methods=['POST'])
 
 
 User.load_from_file()
