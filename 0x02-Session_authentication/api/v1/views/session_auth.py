@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ session_auth module """
 
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response, abort
 from models.user import User
 from api.v1.auth.session_auth import SessionAuth
 import os
@@ -32,7 +32,7 @@ def login():
 
     session_id = sa.create_session(user.id)
     response = make_response(user.to_json())
-    session_name = os.getenv("SESSION_NAME")
+    session_name = os.getenv("SESSION_NAME", "_my_session_id")
     response.set_cookie(session_name, session_id)
 
     return response
@@ -40,6 +40,6 @@ def login():
 @api.route('/auth_session/logout', methods=['DELETE'])
 def logout():
     """Logout route for session authentication"""
-    if not auth.destroy_session(request):
+    if not sa.destroy_session(request):
         abort(404)
     return jsonify({}), 200
