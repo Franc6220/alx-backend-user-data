@@ -21,7 +21,6 @@ auth = None
 
 # Load the correct authentication system based on the AUTH_TYPE environment variable
 auth_type = getenv('AUTH_TYPE')
-
 if auth_type == "basic_auth":
     auth = BasicAuth()
 elif auth_type == "session_auth":

@@ -1,13 +1,14 @@
-import os
+from os import getenv
 from datetime import datetime, timedelta
 from api.v1.auth.session_auth import SessionAuth
 
 class SessionExpAuth(SessionAuth):
+    """ a class SessionExpAuth that inherits from SessionAuth """
     def __init__(self):
         """Initialize session duration from environment variable."""
         super().__init__()
         try:
-            self.session_duration = int(os.getenv('SESSION_DURATION', 0))
+            self.session_duration = int(getenv('SESSION_DURATION', 0))
         except ValueError:
             self.session_duration = 0
 
@@ -21,7 +22,7 @@ class SessionExpAuth(SessionAuth):
                 "user_id": user_id,
                 "created_at": datetime.now()
         }
-        self.user_id_by_session_id[session_id] = session_dict
+        self.user_id_by_session_id[session_id] = session_data
         return session_id
 
     def user_id_for_session_id(self, session_id=None):
