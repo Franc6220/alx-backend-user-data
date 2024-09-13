@@ -51,6 +51,7 @@ class DB:
         and returns the first row found in the users table
         as filtered by the method’s input arguments.
         """
+        # Check if kwargs is empty and raise InvalidRequestError
         if not kwargs:
             raise InvalidRequestError("No query parameters provided")
 
@@ -60,9 +61,14 @@ class DB:
                 raise InvalidRequestError(f"Invalid query parameter: {key}")
 
         try:
+            # Query the database with the provided filters
             user = session.query(User).filter_by(**kwargs).first()
             if user is None:
                 raise NoResultFound("No user matching the provided criteria was found.")
             return user
-        except InvalidRequestError:
-            raise
+        except Exception as e:
+            # Ensure we raise only relevant exceptions
+            if isinstance(e, InvalidRequestError):
+                raise
+            else:
+                raise InvalidRequestError("An error occured during the query.")
