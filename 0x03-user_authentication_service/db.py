@@ -51,12 +51,18 @@ class DB:
         and returns the first row found in the users table
         as filtered by the method’s input arguments.
         """
-        session = self._session
+        if not kwargs:
+            raise InvalidRequestError("No query parameters provided")
+
+        # Check if all keys in kwargs are valid attributes of User
+        for key in kwargs:
+            if not hasattr(User, key):
+                raise InvalidRequestError(f"Invalid query parameter: {key}")
+
         try:
-            # Querying using filter_by with **kwargs
-            user = session.query(User).filter_by(**kwargs).first().one()
+            user = session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound("No user matching the provided criteria was found.")
             return user
         except InvalidRequestError:
-            raise InvalidRequestError("Invalid query parameters were provided.")
-        except NoResultFound:
-            raise NoResultFound("No user matching the provided criteria was found.")
+            raise
