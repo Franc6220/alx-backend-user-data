@@ -2,21 +2,21 @@
 """
 DB module
 """
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import SQLAlchemyError, NoResultFound, SQLAlchemyError
 from user import User
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import SQLAlchemyError
 
-from user import Base
+# Define the Base for ORM models
+Base = declarative_base()
 
 class DB:
     """DB class to manage user records"""
 
     def __init__(self) -> None:
-        """Initialize a new DB instance
-        """
+        """Initialize a new DB instance"""
         self._engine = create_engine("sqlite:///a.db", echo=True)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
@@ -24,8 +24,7 @@ class DB:
 
     @property
     def _session(self) -> Session:
-        """Memoized session object
-        """
+        """Memoized session object"""
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
@@ -43,3 +42,16 @@ class DB:
         except SQLAlchemyError:
             session.rollback()             # Rollback in case of an error
             raise
+
+    def find_user_by(self, **kwargs) -> User:
+        """Find user by arbitrary keyword arguments"""
+        session = self._session
+        try:
+            user = session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound
+            return user
+        except InvalidRequestError:
+            raise InvalidRequestError
+        except NoResultFound:
+            raise NoResultFound
