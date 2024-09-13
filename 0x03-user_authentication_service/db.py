@@ -45,7 +45,11 @@ class DB:
             raise
 
     def find_user_by(self, **kwargs) -> User:
-        """Find user by arbitrary keyword arguments"""
+        """
+        Find user by arbitrary keyword arguments
+        and returns the first row found in the users table
+        as filtered by the method’s input arguments.
+        """
         session = self._session
         try:
             user = session.query(User).filter_by(**kwargs).first().one()
