@@ -6,7 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import InvalidRequestError, NoResultFound, SQLAlchemyError
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 from user import User
 
 
@@ -52,6 +53,7 @@ class DB:
         """
         session = self._session
         try:
+            # Querying using filter_by with **kwargs
             user = session.query(User).filter_by(**kwargs).first().one()
             return user
         except InvalidRequestError:
