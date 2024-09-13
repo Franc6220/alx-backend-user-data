@@ -2,12 +2,13 @@
 """
 DB module
 """
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError, NoResultFound, SQLAlchemyError
 from user import User
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+
 
 # Define the Base for ORM models
 Base = declarative_base()
@@ -47,9 +48,9 @@ class DB:
         """Find user by arbitrary keyword arguments"""
         session = self._session
         try:
-            user = session.query(User).filter_by(**kwargs).first().one()     # Use .one() for strict checks
+            user = session.query(User).filter_by(**kwargs).first().one()
             return user
-        except InvalidRequestError as e:
-            raise InvalidRequestError("Invalid query parameters were provided.") from e
-        except NoResultFound as e:
-            raise NoResultFound("No user matching the provided criteria was found.") from e
+        except InvalidRequestError:
+            raise InvalidRequestError("Invalid query parameters were provided.")
+        except NoResultFound:
+            raise NoResultFound("No user matching the provided criteria was found.")
