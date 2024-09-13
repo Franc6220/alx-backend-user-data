@@ -3,17 +3,16 @@
 DB module
 """
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import SQLAlchemyError
 from user import User
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 
 from user import Base
 
 class DB:
-    """DB class to manage user records
-    """
+    """DB class to manage user records"""
 
     def __init__(self) -> None:
         """Initialize a new DB instance
@@ -38,9 +37,9 @@ class DB:
             new_user = User(email=email, hashed_password=hashed_password)
             session = self._session
             session.add(new_user)
-            session.commit()
-            session.refresh(new_user)
+            session.commit()               # Commit the new user to the database
+            session.refresh(new_user)      # Refresh to load the new ID
             return new_user
         except SQLAlchemyError:
-            session.rollback()
+            session.rollback()             # Rollback in case of an error
             raise
