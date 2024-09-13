@@ -4,7 +4,7 @@ DB module
 """
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import SQLAlchemyError, NoResultFound, SQLAlchemyError
+from sqlalchemy.exc import InvalidRequestError, NoResultFound, SQLAlchemyError
 from user import User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
