@@ -73,6 +73,9 @@ class Auth:
         except NoResultFound:
             # If user is not found
             return False
+        except Exception as e:
+            # In case of any other exceptions (e.g., database or encoding issues)
+            return False
 
         # If password doesn't match
         return False
