@@ -6,7 +6,6 @@ import bcrypt
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
-from typing import Optional
 
 def _hash_password(password: str) -> bytes:
     """
@@ -25,9 +24,10 @@ class Auth:
     """Auth class to interact with the authentication database."""
 
     def __init__(self):
+        "create instance of db"
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> Optional[User]:
+    def register_user(self, email: str, password: str) -> User:
         """
         Registers a user with an email and password.
         If the email is already in use, raise a ValueError.
