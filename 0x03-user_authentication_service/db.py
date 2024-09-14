@@ -6,13 +6,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.exc import SQLAlchemyError, InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
-from user import User
+from user import User, Base
 
-
-# Define the Base for ORM models
-Base = declarative_base()
 
 class DB:
     """DB class to manage user records"""
@@ -56,19 +53,26 @@ class DB:
             raise InvalidRequestError("No query parameters provided")
 
         # Check if all keys in kwargs are valid attributes of User
-        for key in kwargs:
-            if not hasattr(User, key):
+        for k in kwargs.keys():
+            if not hasattr(User, k):                # Check if the argument matches User attributes
                 raise InvalidRequestError(f"Invalid query parameter: {key}")
 
         try:
             # Query the database with the provided filters
-            user = session.query(User).filter_by(**kwargs).first()
+            user = self._session.query(User).filter_by(**kwargs).first()
             if user is None:
                 raise NoResultFound("No user matching the provided criteria was found.")
             return user
-        except Exception as e:
-            # Ensure we raise only relevant exceptions
-            if isinstance(e, InvalidRequestError):
-                raise
-            else:
-                raise InvalidRequestError("An error occured during the query.")
+        except (InvalidRequestError, NoResultFound):
+            raise
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update a user's attributes"""
+        user = self.find_user_by(id=user_id)
+
+        for key, value in kwargs.items():
+            if not hasattr(user, key):
+                raise ValueError(f"Invalid attribute: {key}")
+            setattr(user, key, value)
+
+        self._session.commit()
