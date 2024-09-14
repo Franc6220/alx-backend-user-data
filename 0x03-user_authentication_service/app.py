@@ -25,13 +25,16 @@ def register_user():
     if not email or not password:
         return jsonify({"message": "Missing email or password"}), 400
 
-    try:
-        # Attempt to register the user
-        user = AUTH.register_user(email, password)
-        return jsonify({"email": user.email, "message": "user created"})
-    except ValueError as e:
-        # If user already exists or another error occurs
-        return jsonify({"message": str(e)}), 400
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return jsonify({"message": f"User {email} already existst"}), 400
+
+    hashed_password = hash_password(password)
+    new_user = User(email=email, hashed_password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"email": email, "message": "user created"}), 201
 
 
 if __name__ == "__main__":
