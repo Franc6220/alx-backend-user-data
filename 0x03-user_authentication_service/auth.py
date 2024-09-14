@@ -5,7 +5,7 @@ Auth module for password hashing and to interact with the authentication databas
 import bcrypt
 from db import DB
 from user import User
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 def _hash_password(password: str) -> bytes:
     """
