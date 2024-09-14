@@ -26,9 +26,11 @@ def register_user():
         return jsonify({"message": "Missing email or password"}), 400
 
     try:
-        user = AUTH.register_user(email, password)
+        # Attempt to register the user
+        AUTH.register_user(email, password)
         return jsonify({"email": user.email, "message": "user created"})
     except ValueError as e:
+        # If user already exists or another error occurs
         return jsonify({"message": str(e)}), 400
 
 
