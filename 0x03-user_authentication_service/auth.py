@@ -45,6 +45,7 @@ class Auth:
         try:
             # Try to find if a user already exists with the provided email
             self._db.find_user_by(email=email)
+            # If user is found, raise a ValueError
             raise ValueError(f"User {email} already exists")
         except NoResultFound:
             # If no result is found, we can proceed to create the user
