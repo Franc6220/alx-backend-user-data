@@ -82,5 +82,9 @@ class Auth:
         return False
 
     def _generate_uuid(self) -> str:
-        """Generate a new UUID and return its string representation"""
+        """Generate a new UUID and return its string representation
+
+        Returns:
+            str: The string representation of a new UUID.
+        """
         return str(uuid.uuid4())
