@@ -81,7 +81,7 @@ class Auth:
         # If password doesn't match
         return False
 
-    def _generate_uid(self) -> str:
+    def _generate_uid() -> str:
         """Generate a new UUID and return its string representation
 
         Returns:
