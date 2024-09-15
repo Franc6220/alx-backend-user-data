@@ -38,9 +38,9 @@ class DB:
             session.commit()               # Commit the new user to the database
             session.refresh(new_user)      # Refresh to load the new ID
             return new_user
-        except SQLAlchemyError:
+        except SQLAlchemyError as e:
             session.rollback()             # Rollback in case of an error
-            raise
+            raise e
 
     def find_user_by(self, **kwargs) -> User:
         """
@@ -55,7 +55,7 @@ class DB:
         # Check if all keys in kwargs are valid attributes of User
         for k in kwargs.keys():
             if not hasattr(User, k):                # Check if the argument matches User attributes
-                raise InvalidRequestError(f"Invalid query parameter: {key}")
+                raise InvalidRequestError(f"Invalid query parameter: {k}")
 
         try:
             # Query the database with the provided filters
@@ -63,8 +63,8 @@ class DB:
             if user is None:
                 raise NoResultFound("No user matching the provided criteria was found.")
             return user
-        except (InvalidRequestError, NoResultFound):
-            raise
+        except SQLAlchemyError as e:
+            raise e
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update a user's attributes"""
@@ -75,4 +75,8 @@ class DB:
                 raise ValueError(f"Invalid attribute: {key}")
             setattr(user, key, value)
 
-        self._session.commit()
+        try:
+            self._session.commit()
+        except SQLAlchemyError as e:
+            self._session.rollback()
+            raise e
