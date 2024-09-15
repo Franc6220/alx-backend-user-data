@@ -88,3 +88,26 @@ class Auth:
             str: The string representation of a new UUID.
         """
         return str(uuid.uuid4())
+
+    def create_session(self, email: str) -> str:
+        """
+        Create a session for a user by email and return the session ID.
+
+        Args:
+            email (str): The user's email.
+
+        Returns:
+            str: The session ID if the user exists, None otherwise.
+        """
+        try:
+            # Find the user by email
+            user = self._db.find_user_by(email=email)
+            # Generate a new UUID for the session
+            session_id = str(uuid.uuid4())
+            # Update the user's session_id in the database
+            self._db.update_user(email=email, session_id=session_id)
+            # Return the session ID
+            return session_id
+        except NoResultFound:
+            # If no user is found with the provided email
+            return None
