@@ -47,8 +47,8 @@ def login():
     if not email or not password:
         abort(400, description="Missing email or password")
 
-    if auth.valid_login(email, password):
-        session_id = auth.create_session(email)
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
         response = make_response(
                 jsonify({"email": email, "message": "logged in"})
                 )
