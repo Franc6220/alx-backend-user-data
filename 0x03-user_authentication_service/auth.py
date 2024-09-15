@@ -103,10 +103,11 @@ class Auth:
             # Find the user by email
             user = self._db.find_user_by(email=email)
 
+            # Generate a new UUID for the session
+            session_id = str(uuid.uuid4())
+
+            # Update the user's session_id in the database
             if user:
-                # Generate a new UUID for the session
-                session_id = str(uuid.uuid4())
-                # Update the user's session_id in the database
                 self._db.update_user(email=email, session_id=session_id)
                 # Return the session ID
                 return session_id
@@ -114,4 +115,7 @@ class Auth:
                 return None
         except NoResultFound:
             # If no user is found with the provided email
+            return None
+        except Exception as e:
+            # Handle any other potential exceptions
             return None
