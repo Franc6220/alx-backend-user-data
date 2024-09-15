@@ -21,6 +21,15 @@ def _hash_password(password: str) -> bytes:
     # Generate a salt and hash the password using bcrypt
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+def _generate_uuid() -> str:
+    """
+    Generate a new UUID and return its string representation 
+
+    Returns:
+          str: The string representation of a new UUID.
+    """
+    return str(uuid.uuid4())
+
 class Auth:
     """Auth class to interact with the authentication database."""
 
@@ -81,14 +90,6 @@ class Auth:
         # If password doesn't match
         return False
 
-    def _generate_uuid() -> str:
-        """Generate a new UUID and return its string representation
-
-        Returns:
-            str: The string representation of a new UUID.
-        """
-        return str(uuid.uuid4())
-
     def create_session(self, email: str) -> str:
         """
         Create a session for a user by email and return the session ID.
@@ -102,12 +103,10 @@ class Auth:
         try:
             # Find the user by email
             user = self._db.find_user_by(email=email)
-
-            # Generate a new UUID for the session
-            session_id = str(uuid.uuid4())
-
-            # Update the user's session_id in the database
             if user:
+                # Generate a new UUID for the session
+                session_id = _generate_uuid4()
+                # Update the user's session_id in the database
                 self._db.update_user(email=email, session_id=session_id)
                 # Return the session ID
                 return session_id
